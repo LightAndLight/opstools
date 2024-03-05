@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Main where
 
 import Control.Applicative ((<**>))
@@ -22,9 +24,25 @@ data Config
 
 configParser :: Options.Parser Config
 configParser =
-  Options.subparser
-    ( Options.command "private" (Options.info (configPrivateParser <**> Options.helper) Options.fullDesc)
-        <> Options.command "public" (Options.info (configPublicParser <**> Options.helper) Options.fullDesc)
+  Options.hsubparser
+    ( Options.command
+        "private"
+        ( Options.info
+            configPrivateParser
+            ( Options.fullDesc
+                <> Options.progDesc "Generate a private key"
+                <> Options.footer "Generates a new OpenSSH format private key and writes it to stdout."
+            )
+        )
+        <> Options.command
+          "public"
+          ( Options.info
+              configPublicParser
+              ( Options.fullDesc
+                  <> Options.progDesc "Generate a public key from a private key"
+                  <> Options.footer "Reads an OpenSSH format public key from stdin and writes its public key to stdout."
+              )
+          )
     )
 
 configPrivateParser :: Options.Parser Config
@@ -37,7 +55,14 @@ configPublicParser =
 
 main :: IO ()
 main = do
-  config <- Options.execParser (Options.info (configParser <**> Options.helper) Options.fullDesc)
+  config <-
+    Options.execParser
+      ( Options.info
+          (configParser <**> Options.helper)
+          ( Options.fullDesc
+              <> Options.progDesc "Generate OpenSSH format private and public keys"
+          )
+      )
   case config of
     Private -> genPrivateKey
     Public -> genPublicKey
