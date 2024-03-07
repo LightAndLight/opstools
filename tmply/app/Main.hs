@@ -145,7 +145,7 @@ substitute files arg =
   partParser :: Parser Part
   partParser =
     Placeholder <$ Parser.char '{' <*> Parser.decimal <* Parser.char '}'
-      <|> String . ByteString.Char8.unpack <$> Parser.takeWhile1 Char.isAscii
+      <|> String . ByteString.Char8.unpack <$> Parser.takeWhile1 ((&&) <$> Char.isAscii <*> (/= '{'))
 
   substitutePart :: Part -> String
   substitutePart part =
