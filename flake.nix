@@ -17,10 +17,15 @@
         };
 
         packages.sshgen = pkgs.haskellPackages.callPackage ./sshgen/sshgen.nix {};
+        packages.tmply = pkgs.haskellPackages.callPackage ./tmply/tmply.nix {};
 
         apps.sshgen = {
           type = "app";
           program = "${pkgs.haskell.lib.justStaticExecutables packages.sshgen}/bin/sshgen";
+        };
+        apps.tmply = {
+          type = "app";
+          program = "${pkgs.haskell.lib.justStaticExecutables packages.tmply}/bin/tmply";
         };
       }
     );
