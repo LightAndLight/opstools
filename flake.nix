@@ -18,6 +18,7 @@
 
         packages.sshgen = pkgs.haskellPackages.callPackage ./sshgen/sshgen.nix {};
         packages.tmply = pkgs.haskellPackages.callPackage ./tmply/tmply.nix {};
+        packages.retry= pkgs.haskellPackages.callPackage ./retry/retry.nix {};
 
         apps.sshgen = {
           type = "app";
@@ -26,6 +27,10 @@
         apps.tmply = {
           type = "app";
           program = "${pkgs.haskell.lib.justStaticExecutables packages.tmply}/bin/tmply";
+        };
+        apps.retry = {
+          type = "app";
+          program = "${pkgs.haskell.lib.justStaticExecutables packages.retry}/bin/retry";
         };
       }
     );
